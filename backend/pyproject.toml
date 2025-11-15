@@ -1,0 +1,26 @@
+[project]
+name = "n8n-backend"
+version = "0.1.0"
+description = "FastAPI backend that triggers n8n workflows"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "fastapi",
+    "uvicorn[standard]",
+    "sqlalchemy>=2.0",
+    "psycopg2-binary",
+    "alembic",
+    "httpx",
+    "pydantic-settings",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "pytest-asyncio",
+    "black",
+]
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"

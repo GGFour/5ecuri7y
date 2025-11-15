@@ -1,0 +1,26 @@
+apiVersion: run.googleapis.com/v1
+kind: Service
+metadata:
+  name: n8n-backend
+spec:
+  template:
+    metadata:
+      annotations:
+        run.googleapis.com/cloudsql-instances: ${CLOUDSQL_INSTANCE}
+    spec:
+      containers:
+        - image: ${BACKEND_IMAGE}
+          ports:
+            - containerPort: 8000
+          env:
+            - name: DATABASE_URL
+              value: postgresql+psycopg2://postgres:postgres@localhost:5432/postgres
+            - name: N8N_WEBHOOK_URL
+              value: ${N8N_WEBHOOK_URL}
+          volumeMounts:
+            - name: cloudsql
+              mountPath: /cloudsql
+      volumes:
+        - name: cloudsql
+          cloudSqlInstance:
+            instanceId: ${CLOUDSQL_INSTANCE}

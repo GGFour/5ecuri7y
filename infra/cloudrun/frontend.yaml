@@ -1,0 +1,12 @@
+apiVersion: run.googleapis.com/v1
+kind: Service
+metadata:
+  name: n8n-frontend
+spec:
+  template:
+    spec:
+      containers:
+        - image: ${FRONTEND_IMAGE}
+          env:
+            - name: VITE_API_BASE_URL
+              value: ${BACKEND_URL}
