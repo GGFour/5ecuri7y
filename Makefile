@@ -2,7 +2,7 @@
 
 COMPOSE=docker-compose -f docker-compose-app.yml
 
-DEV_ENV=.env.example
+DEV_ENV=.env
 
 dev:
 	$(COMPOSE) up --build
