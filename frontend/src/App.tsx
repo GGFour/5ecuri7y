@@ -27,7 +27,7 @@ interface TriggerResponse {
   data?: VendorSecurityProfile;
 }
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000";
+// const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000";
 
 function App() {
   const [term, setTerm] = useState("");
@@ -78,7 +78,8 @@ function App() {
       // fake latency; in real mode you’d call the API here
       await new Promise((resolve) => setTimeout(resolve, 500));
       setResult(dummyPayload);
-    } catch (err) {
+    } catch (error) {
+      console.error(error);
       setError("Failed to load dummy data");
     } finally {
       setLoading(false);
