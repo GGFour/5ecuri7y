@@ -31,7 +31,10 @@ def test_trigger_n8n_returns_payload(monkeypatch):
 
             self.created_at = datetime.datetime.utcnow()
 
-    monkeypatch.setattr("app.services.search_service.save_result", lambda db, term, payload: DummyRecord(term))
+    monkeypatch.setattr(
+        "app.services.search_service.save_result",
+        lambda db, term, payload: DummyRecord(term),
+    )
 
     response = client.post("/api/trigger-n8n", json={"input_term": "hello"})
     assert response.status_code == 200
