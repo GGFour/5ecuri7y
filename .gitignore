@@ -12,7 +12,6 @@ dist/
 
 # Env
 .env
-.env.*
 
 # uv
 .python-version
