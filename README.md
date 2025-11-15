@@ -74,27 +74,35 @@ curl -X POST http://localhost:8000/api/trigger-n8n \
   -d '{"input_term": "security"}'
 ```
 
-## Running tests
+## Fast checks (style + tests)
 
-All commands can be executed locally or inside Docker (see README instructions inside containers).
+All of the quality gates run outside Docker so contributors can validate changes in seconds. Python tooling is isolated in `backend/.venv` and is always executed through [uv](https://github.com/astral-sh/uv) for reproducible dependency management.
 
 ```bash
-make test                 # runs backend pytest (via uv) + frontend vitest
-make backend-test         # backend only
-make frontend-test        # frontend only
+make style-check          # Black --check for backend/app + backend/tests
+make backend-test         # pytest via uv and backend/.venv
+make frontend-test        # ESLint via npm (linting doubles as the fast frontend test)
+make checks               # runs all of the above sequentially
 ```
 
-Vitest uses JSDOM and @testing-library/react for the UI, while pytest covers API routing and the n8n trigger behavior with monkeypatched webhook calls.
+Useful helpers:
+
+```bash
+make pre-commit           # run every pre-commit hook against the repo
+pre-commit install        # install the hooks in .git/hooks
+```
+
+Vitest is available for deeper UI testing, but ESLint runs by default for a faster, deterministic signal. Backend pytest suites continue to cover the API routing and the n8n trigger behavior with monkeypatched webhook calls.
 
 ## Formatting
 
-Backend formatting is powered by Black via uv:
+Backend formatting is powered by Black via uv and the shared `.venv`:
 
 ```bash
 make format
 ```
 
-(Feel free to add ESLint/Prettier in the frontend if desired.)
+(Feel free to add ESLint/Prettier formatters in the frontend if desired.)
 
 ## Docker images
 
@@ -145,7 +153,10 @@ make format
 
 5. Run Alembic migrations using a Cloud Run Job or Cloud Build step: `uv run alembic upgrade head` with the production DATABASE_URL.
 
-The GitHub Actions workflow (`.github/workflows/deploy.yml`) automates tests, builds/pushes both images, and deploys them to Cloud Run once proper GCP secrets are configured.
+GitHub Actions keeps the repo green:
+
+- `.github/workflows/ci.yml` runs the same Black, pytest, and ESLint checks defined in the Makefile on every push/PR.
+- `.github/workflows/deploy.yml` automates tests, builds/pushes both images, and deploys them to Cloud Run once proper GCP secrets are configured.
 
 ## Environment variables
 

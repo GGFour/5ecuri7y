@@ -18,6 +18,7 @@ dev = [
     "pytest",
     "pytest-asyncio",
     "black",
+    "pre-commit",
 ]
 
 [build-system]

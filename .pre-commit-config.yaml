@@ -1,0 +1,18 @@
+repos:
+  - repo: local
+    hooks:
+      - id: backend-style
+        name: Backend style check (Black)
+        entry: make style-check
+        language: system
+        pass_filenames: false
+      - id: backend-tests
+        name: Backend unit tests (pytest)
+        entry: make backend-test
+        language: system
+        pass_filenames: false
+      - id: frontend-tests
+        name: Frontend lint (eslint)
+        entry: make frontend-test
+        language: system
+        pass_filenames: false
