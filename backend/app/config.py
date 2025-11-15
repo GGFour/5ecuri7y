@@ -11,6 +11,7 @@ class Settings(BaseSettings):
 
     n8n_webhook_url: str = "https://example.com/webhook/mock"
     n8n_timeout_seconds: int = 15
+    n8n_jwt_token: str = "json.web.token"
 
     class Config:
         env_file = ".env"

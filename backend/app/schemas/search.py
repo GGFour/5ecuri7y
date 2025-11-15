@@ -1,11 +1,22 @@
 from datetime import datetime
 from typing import Any, Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 
 class TriggerN8NRequest(BaseModel):
-    inputTerm: str
+    input_term: str
+
+
+class N8NWebhookRequest(BaseModel):
+    """Internal schema for the outgoing n8n webhook request.
+
+    Includes the server-side JWT so we never expose it via the public
+    API request body. Built inside the router before dispatching to n8n.
+    """
+
+    input_term: str
+    jwt: str
 
 
 class SearchResultSchema(BaseModel):
@@ -15,8 +26,8 @@ class SearchResultSchema(BaseModel):
     result_payload: Any
     created_at: datetime
 
-    class Config:
-        orm_mode = True
+    # Pydantic v2 replacement for orm_mode to allow attribute access
+    model_config = ConfigDict(from_attributes=True)
 
 
 class TriggerN8NResponse(BaseModel):

@@ -24,7 +24,7 @@ function App() {
       const response = await fetch(`${API_BASE}/api/trigger-n8n`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ inputTerm: term })
+        body: JSON.stringify({ input_term: term })
       });
       if (!response.ok) {
         throw new Error("Failed to trigger workflow");

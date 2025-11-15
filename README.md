@@ -71,7 +71,7 @@ You can also test the API directly:
 ```bash
 curl -X POST http://localhost:8000/api/trigger-n8n \
   -H "Content-Type: application/json" \
-  -d '{"inputTerm": "security"}'
+  -d '{"input_term": "security"}'
 ```
 
 ## Running tests
