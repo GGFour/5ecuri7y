@@ -1,0 +1,13 @@
+steps:
+  - name: gcr.io/cloud-builders/docker
+    args:
+      ["build", "-f", "infra/backend.Dockerfile", "-t", "$PROJECT_ID-docker.pkg.dev/$PROJECT_ID/n8n/backend:$COMMIT_SHA", "."]
+  - name: gcr.io/cloud-builders/docker
+    args:
+      ["push", "$PROJECT_ID-docker.pkg.dev/$PROJECT_ID/n8n/backend:$COMMIT_SHA"]
+  - name: gcr.io/cloud-builders/docker
+    args:
+      ["build", "-f", "infra/frontend.Dockerfile", "-t", "$PROJECT_ID-docker.pkg.dev/$PROJECT_ID/n8n/frontend:$COMMIT_SHA", "."]
+  - name: gcr.io/cloud-builders/docker
+    args:
+      ["push", "$PROJECT_ID-docker.pkg.dev/$PROJECT_ID/n8n/frontend:$COMMIT_SHA"]
