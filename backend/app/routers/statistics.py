@@ -12,7 +12,9 @@ router = APIRouter(prefix="/statistics", tags=["statistics"])
 @router.get("/{prod_id}", response_model=ProductStatisticsResponse)
 def get_product_statistics(prod_id: int, db: Session = Depends(get_db)):
     result = db.execute(
-        select(ProductVendorURL.id, ProductVendorURL.json).where(ProductVendorURL.id == prod_id)
+        select(ProductVendorURL.id, ProductVendorURL.json).where(
+            ProductVendorURL.id == prod_id
+        )
     ).first()
 
     if result is None:

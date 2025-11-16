@@ -1,5 +1,5 @@
 from functools import lru_cache
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
@@ -13,9 +13,7 @@ class Settings(BaseSettings):
     n8n_timeout_seconds: int = 15
     n8n_jwt_token: str = "json.web.token"
 
-    class Config:
-        env_file = ".env"
-        env_file_encoding = "utf-8"
+    model_config = SettingsConfigDict(env_file=".env")
 
 
 @lru_cache

@@ -68,7 +68,7 @@ def test_trigger_n8n_returns_payload(monkeypatch):
 
 
 def test_get_statistics_returns_payload():
-    row = SimpleNamespace(id=123, json="{\"key\": \"value\"}")
+    row = SimpleNamespace(id=123, json='{"key": "value"}')
     app.dependency_overrides[get_db] = override_get_db_with_row(row)
 
     response = client.get("/statistics/123")
