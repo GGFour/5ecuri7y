@@ -5,7 +5,7 @@ from pydantic import BaseModel, ConfigDict
 
 
 class TriggerN8NRequest(BaseModel):
-    input_term: str
+    query: str
 
 
 class N8NWebhookRequest(BaseModel):
@@ -15,13 +15,13 @@ class N8NWebhookRequest(BaseModel):
     API request body. Built inside the router before dispatching to n8n.
     """
 
-    input_term: str
+    query: str
     jwt: str
 
 
 class SearchResultSchema(BaseModel):
     id: int
-    input_term: str
+    query: str
     status: str
     result_payload: Any
     created_at: datetime

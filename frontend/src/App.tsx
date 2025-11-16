@@ -27,7 +27,7 @@ interface TriggerResponse {
   data?: VendorSecurityProfile;
 }
 
-// const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000";
+const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000";
 
 function App() {
   const [term, setTerm] = useState("");
@@ -35,26 +35,26 @@ function App() {
   const [result, setResult] = useState<TriggerResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const dummyPayload: TriggerResponse = {
-    message: "Dummy security profile loaded",
-    data: {
-      companyName: "SecureCloud Technologies Inc.",
-      productType: "SaaS - Cloud Security",
-      lastAssessedDaysAgo: 2,
-      validationStatus: "validated",
-      riskLevel: "low",
-      confidenceLevel: "high",
-      overallScore: 82,
-      knownCves: 12,
-      certifications: ["SOC 2", "ISO 27001", "PCI DSS"],
-      factors: [
-        { name: "Security Posture", score: 78 },
-        { name: "Data & Compliance", score: 90 },
-        { name: "Admin Controls", score: 88 },
-        { name: "Reputation Score", score: 82 },
-      ],
-    },
-  };
+  // const dummyPayload: TriggerResponse = {
+  //   message: "Dummy security profile loaded",
+  //   data: {
+  //     companyName: "SecureCloud Technologies Inc.",
+  //     productType: "SaaS - Cloud Security",
+  //     lastAssessedDaysAgo: 2,
+  //     validationStatus: "validated",
+  //     riskLevel: "low",
+  //     confidenceLevel: "high",
+  //     overallScore: 82,
+  //     knownCves: 12,
+  //     certifications: ["SOC 2", "ISO 27001", "PCI DSS"],
+  //     factors: [
+  //       { name: "Security Posture", score: 78 },
+  //       { name: "Data & Compliance", score: 90 },
+  //       { name: "Admin Controls", score: 88 },
+  //       { name: "Reputation Score", score: 82 },
+  //     ],
+  //   },
+  // };
 
   const handleTrigger = async () => {
     setLoading(true);
@@ -65,22 +65,22 @@ function App() {
 
       //ACTUAL DATA FETCHING
       //ACTUAL DATA FETCHING
-      // const response = await fetch(`${API_BASE}/api/trigger-n8n`, {
-      //   method: "POST",
-      //   headers: { "Content-Type": "application/json" },
-      //   body: JSON.stringify({ input_term: term })
-      // });
-      // if (!response.ok) {
-      //   throw new Error("Failed to trigger workflow");
-      // }
-      // const payload = (await response.json()) as TriggerResponse;
-      // setResult(payload);
+      const response = await fetch(`${API_BASE}/api/trigger-n8n`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ query: term })
+      });
+      if (!response.ok) {
+        throw new Error("Failed to trigger workflow");
+      }
+      const payload = (await response.json()) as TriggerResponse;
+      setResult(payload);
       // fake latency; in real mode you’d call the API here
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      setResult(dummyPayload);
+      // await new Promise((resolve) => setTimeout(resolve, 500));
+      // setResult(dummyPayload);
     } catch (error) {
       console.error(error);
-      setError("Failed to load dummy data");
+      setError("Failed to receive data");
     } finally {
       setLoading(false);
     }
@@ -92,28 +92,24 @@ function App() {
     <div className="min-h-screen bg-slate-50 text-slate-900">
       <div className="max-w-3xl mx-auto px-4 py-12 space-y-8">
         <header className="space-y-2">
-          <p className="text-sm uppercase tracking-widest text-slate-500">
-            Automation Playground
-          </p>
-          <h1 className="text-3xl font-semibold">Trigger n8n pipeline</h1>
+          <h1 className="text-3xl font-semibold">SecurityAssess AI</h1>
           <p className="text-slate-600">
-            Enter any vendor name to simulate a security posture assessment
-            and view the results.
+            AI-powered security assessor that turns applications into CISO-ready trust briefs with sources in seconds
           </p>
         </header>
 
         <div className="space-y-4 rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
           <label className="text-sm font-medium text-slate-700" htmlFor="term">
-            Vendor name
+            Enter product name, vendor or even an URL
           </label>
           <Input
             id="term"
-            placeholder="e.g. SecureCloud Technologies Inc."
+            placeholder="Perplexity AI"
             value={term}
             onChange={(event) => setTerm(event.target.value)}
             disabled={loading}
           />
-          <Button onClick={handleTrigger} disabled={loading || !term.trim()}>
+          <Button variant="outline" onClick={handleTrigger} disabled={loading || !term.trim()}>
             {loading ? "Loading..." : "Run n8n workflow (dummy)"}
           </Button>
         </div>

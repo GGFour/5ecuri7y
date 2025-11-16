@@ -5,6 +5,7 @@ from fastapi.testclient import TestClient
 
 from app.main import app
 from app.database import get_db
+import httpx, json
 
 client = TestClient(app)
 
@@ -38,33 +39,23 @@ def test_health_ping():
     assert response.json()["status"] == "ok"
 
 
-def test_trigger_n8n_returns_payload(monkeypatch):
+def test_trigger_n8n_returns_passthrough(monkeypatch):
     async def fake_trigger(payload):
         await asyncio.sleep(0)
-        return {"echo": payload["input_term"], "status": "mocked"}
+        request = httpx.Request("POST", "http://test")
+        return httpx.Response(
+            status_code=200,
+            request=request,
+            content=json.dumps({"echo": payload["query"], "status": "mocked"}).encode(),
+            headers={"Content-Type": "application/json"},
+        )
 
     monkeypatch.setattr("app.services.n8n_client.trigger_flow", fake_trigger)
 
-    class DummyRecord:
-        def __init__(self, input_term):
-            self.id = 1
-            self.input_term = input_term
-            self.status = "completed"
-            self.result_payload = "{}"
-            self.message = "message"
-            import datetime
-
-            self.created_at = datetime.datetime.utcnow()
-
-    monkeypatch.setattr(
-        "app.services.search_service.save_result",
-        lambda db, term, payload: DummyRecord(term),
-    )
-
-    response = client.post("/api/trigger-n8n", json={"input_term": "hello"})
+    response = client.post("/api/trigger-n8n", json={"query": "hello"})
     assert response.status_code == 200
     data = response.json()
-    assert data["data"]["echo"] == "hello"
+    assert data["echo"] == "hello"
 
 
 def test_get_statistics_returns_payload():

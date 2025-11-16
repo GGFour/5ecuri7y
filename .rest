@@ -9,7 +9,7 @@ POST {{backend}}/api/trigger-n8n
 Content-Type: application/json
 
 {
-  "input_term": "hello"
+  "query": "hello"
 }
 
 ### Get statistics — existing id (expected 200)

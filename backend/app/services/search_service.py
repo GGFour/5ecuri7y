@@ -6,9 +6,9 @@ from sqlalchemy.orm import Session
 from ..models import SearchResult
 
 
-def save_result(db: Session, input_term: str, payload: Dict[str, Any]) -> SearchResult:
+def save_result(db: Session, query: str, payload: Dict[str, Any]) -> SearchResult:
     record = SearchResult(
-        input_term=input_term,
+        query=query,
         status="completed",
         result_payload=json.dumps(payload),
     )

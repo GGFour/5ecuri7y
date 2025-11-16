@@ -1,25 +1,34 @@
-from fastapi import APIRouter, Depends
-from sqlalchemy.orm import Session
+from fastapi import APIRouter, Response
 
-from ..database import get_db
-from ..schemas.search import TriggerN8NRequest, TriggerN8NResponse, N8NWebhookRequest
+from ..schemas.search import TriggerN8NRequest, N8NWebhookRequest
 from ..config import get_settings
-from ..services import n8n_client, search_service
+from ..services import n8n_client
 
 router = APIRouter(prefix="/api", tags=["n8n"])
 
 
-@router.post("/trigger-n8n", response_model=TriggerN8NResponse)
-async def trigger_n8n(payload: TriggerN8NRequest, db: Session = Depends(get_db)):
+@router.post("/trigger-n8n")
+async def trigger_n8n(payload: TriggerN8NRequest):
+    """Proxy trigger request to n8n and forward its raw response.
+
+    Accepts client parameters, injects server-side JWT, then returns
+    exactly what n8n replies (status, headers, body) without persistence.
+    """
     settings = get_settings()
     internal_payload = N8NWebhookRequest(
-        input_term=payload.input_term, jwt=settings.n8n_jwt_token
+        query=payload.query, jwt=settings.n8n_jwt_token
     )
-    result = await n8n_client.trigger_flow(internal_payload.model_dump())
-    record = search_service.save_result(db, payload.input_term, result)
+    n8n_response = await n8n_client.trigger_flow(internal_payload.model_dump())
 
-    return TriggerN8NResponse(
-        message="n8n flow triggered successfully",
-        data=result,
-        record=record,
+    # Build FastAPI Response preserving status and content-type
+    content_type = n8n_response.headers.get("content-type") or "application/json"
+    return Response(
+        content=n8n_response.content,
+        status_code=n8n_response.status_code,
+        media_type=content_type,
+        headers={
+            k: v
+            for k, v in n8n_response.headers.items()
+            if k.lower() in ["content-type"]
+        },
     )

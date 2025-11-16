@@ -7,7 +7,7 @@ class SearchResult(Base):
     __tablename__ = "search_results"
 
     id = Column(Integer, primary_key=True, index=True)
-    input_term = Column(String(255), nullable=False)
+    query = Column(String(255), nullable=False)
     status = Column(String(50), nullable=False, default="completed")
     result_payload = Column(Text, nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())

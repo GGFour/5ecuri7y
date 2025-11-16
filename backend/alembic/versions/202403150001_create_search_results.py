@@ -20,7 +20,7 @@ def upgrade() -> None:
     op.create_table(
         "search_results",
         sa.Column("id", sa.Integer(), primary_key=True),
-        sa.Column("input_term", sa.String(length=255), nullable=False),
+        sa.Column("query", sa.String(length=255), nullable=False),
         sa.Column("status", sa.String(length=50), nullable=False, server_default="completed"),
         sa.Column("result_payload", sa.Text(), nullable=False),
         sa.Column("created_at", sa.DateTime(timezone=True), server_default=sa.func.now()),
