@@ -204,7 +204,7 @@ function HomeView({ term, onTermChange, onSubmit, isSubmitting, errorMessage, se
       <Card className="flex-1">
         <CardHeader>
           <CardTitle>SecurityAssess AI</CardTitle>
-          <CardDescription>Kick off a new scan and get routed to the fast dashboard.</CardDescription>
+          <CardDescription>Start a new scan and get routed to your previous findings dashboard.</CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col gap-4">
           <div className="space-y-2">
