@@ -277,7 +277,6 @@ function DashboardView({ session, onBack }: DashboardViewProps) {
   const [isPolling, setIsPolling] = useState(true)
 
   useEffect(() => {
-    let timer: number | undefined
     let stopped = false
 
     setStatistics(null)
@@ -316,7 +315,7 @@ function DashboardView({ session, onBack }: DashboardViewProps) {
     }
 
     fetchStatistics()
-    timer = window.setInterval(fetchStatistics, 1000)
+    const timer = window.setInterval(fetchStatistics, 1000)
 
     return () => {
       stopped = true

@@ -62,7 +62,7 @@ def test_get_statistics_returns_payload():
     row = SimpleNamespace(id=123, json='{"key": "value"}')
     app.dependency_overrides[get_db] = override_get_db_with_row(row)
 
-    response = client.get("/statistics/123")
+    response = client.get("/api/statistics/123")
 
     assert response.status_code == 200
     assert response.json() == {"id": 123, "json": row.json}
@@ -73,7 +73,7 @@ def test_get_statistics_returns_payload():
 def test_get_statistics_not_found():
     app.dependency_overrides[get_db] = override_get_db_with_row(None)
 
-    response = client.get("/statistics/999")
+    response = client.get("/api/statistics/999")
 
     assert response.status_code == 404
     assert response.json()["detail"] == "Product statistics not found"
